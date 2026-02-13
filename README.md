@@ -1,116 +1,150 @@
-UltiDB
+# UltiDB
 
-UltiDB ist ein zentraler Hub zum Entdecken, Durchsuchen und Tracken von kuratierten Awesome Lists von GitHub
-– inklusive täglichem Sync, Kategorien, Suchfunktion und Update-Tracker.
-​
+> A centralized hub for interacting with, searching, and tracking curated Awesome Lists from GitHub - including daily sync, categories, search function, and update tracker.
 
-Features
-Zentralisierte Übersicht über aktuell 672 Awesome Lists in 35 Kategorien.
-​
-Volltextsuche nach Listen, Frameworks, Libraries und Themen.
-​
-Kategoriesystem inspiriert von sindresorhus/awesome und awesomelists.top.
-​
-Täglicher Sync mit sindresorhus/awesome: neue Listen werden hinzugefügt, veraltete (6+ Monate ohne Updates) entfernt.
-​
-Tracker für aktualisierte Listen mit eigener Statistik-Card „Updated Today“ und Dropdown für zuletzt aktualisierte Listen.
-​
-Voll responsive UI mit zentriertem Layout, optimiert für Mobile, Tablet und Desktop (Next.js + shadcn/ui).
-​
-Tech-Stack
-Frontend: Next.js (App Router), React, TypeScript, shadcn/ui.
-​
-Backend / API: Next.js API Routes (REST), Cron-/Sync-Endpunkte.
-​
-Datenbank: Prisma ORM mit Modellen für AwesomeList, Category, ListUpdate, DailyStats.
-​
-Tracking & Sync: GitHub-Integration (Commits, Stars, Forks, Last Update), täglicher Sync von sindresorhus/awesome.
-​
-Kernfunktionen im Detail
-Kategorien & Listen
-35 vordefinierte Kategorien wie AI & ML, Back-End Development, Programming Languages, DevOps, Data Science, CLI Tools, Gaming und mehr.
-​
-Automatische Zuordnung von Listen zu Kategorien anhand von README-Abschnitten und Fallback-Regeln.
-​
-Kachel-Layout mit optimierter Lesbarkeit: Name über maximal zwei Zeilen, Beschreibung gekürzt, kein Overflow über Kartenränder.
-​
-Tracker & Updates
-ListUpdate-Model zum Speichern einzelner Commits/Änderungen pro Liste.
-​
-DailyStats-Model für aggregierte Tagesstatistiken (z. B. Anzahl aktualisierter Listen).
-​
-„Updated Today“-Stat-Kachel zeigt die Anzahl der heute geupdateten Listen.
-​
-Dropdown im Header mit einer Liste der zuletzt aktualisierten Awesome Lists (Name, Zeit, Commit-Info).
-​
-Täglicher Sync mit sindresorhus/awesome
-API-Endpunkt /api/sync holt die aktuelle Struktur von https://github.com/sindresorhus/awesome, aktualisiert bestehende Einträge, fügt neue hinzu und entfernt veraltete (6 Monate ohne Update).
-​
-API-Endpunkt /api/cron/daily führt den kompletten Tageslauf aus: Sync + Tracker-Update.
-​
-Konfigurierbar für externe Cron-Services (z. B. cron-job.org) oder manuelle Ausführung via curl.
-​
-Beispiel (manuell):
-# Kompletten Daily-Cron ausführen
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![Made with Next.js](https://img.shields.io/badge/Made%20with-Next.js-black)](https://nextjs.org/)
+
+## ✨ Features
+
+- 📊 **Centralized Overview**: Browse 672+ Awesome Lists organized in 35 categories
+- 🔍 **Full-text Search**: Search across lists, frameworks, libraries, and themes
+- 📂 **Smart Categories**: Lists auto-categorized (AI & ML, Back-End Development, Programming Languages, DevOps, Data Science, CLI Tools, Gaming, and more)
+- 🔄 **Daily Sync**: Automatic sync with [sindresorhus/awesome](https://github.com/sindresorhus/awesome) - new lists added, outdated removed (6 months without updates)
+- 📈 **Live Tracker**: Track updated lists with statistics card, "Updated Today" counter, and dropdown showing recently updated Awesome Lists (name, time, commit info)
+- 📱 **Responsive UI**: Optimized card layout for mobile, tablet, and desktop (Next.js + shadcn/ui)
+
+## 🎯 Core Functionality
+
+### Categories & Lists
+- 35 predefined categories covering all major tech domains
+- Automatic list-to-category mapping based on README sections and fallback rules
+- Card layout with optimized readability: name spans max 2 lines, truncated descriptions, no card overflow
+
+### Tracker & Updates
+- **ListUpdate Model**: Stores individual commits/changes per list
+- **DailyStats Model**: Aggregated daily statistics (e.g., count of updated lists)
+- **"Updated Today" Stat Card**: Shows number of lists updated today
+- **Header Dropdown**: Displays recently updated Awesome Lists with name, time, and commit info
+
+### Daily Sync with sindresorhus/awesome
+- **API Endpoint `/api/sync`**: Fetches current structure from https://github.com/sindresorhus/awesome, updates existing entries, adds new ones, removes outdated (6 months without updates)
+- **API Endpoint `/api/cron/daily`**: Runs complete daily workflow: Sync + Tracker Update
+- Configurable for external cron services (e.g., cron-job.org) or manual execution via curl
+
+### Examples (Manual Execution)
+
+```bash
+# Run complete daily cron
 curl http://localhost:3000/api/cron/daily
 
-# Nur Listen synchronisieren
+# Sync lists only
 curl -X POST http://localhost:3000/api/sync
 
-# Nur Tracker aktualisieren
+# Update tracker only
 curl -X POST http://localhost:3000/api/tracker
-Getting Started
-Voraussetzungen
-Node.js (empfohlen: LTS-Version)
+```
 
-Eine PostgreSQL-, MySQL- oder SQLite-Datenbank (konfigurierbar via Prisma)
+## 🛠️ Tech Stack
 
-GitHub Token (optional) für erweitertes Commit-Tracking
+**Frontend**: Next.js (App Router), React, TypeScript, shadcn/ui
 
-Installation
+**Backend / API**: Next.js API Routes (REST), Cron/Sync endpoints
 
-# Repository klonen
+**Database**: Prisma ORM with models for AwesomeList, Category, ListUpdate, DailyStats
+
+**Tracking & Sync**: GitHub Integration (commits, stars, forks, last update), daily sync from sindresorhus/awesome
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (recommended: LTS version)
+- PostgreSQL, MySQL, or SQLite database (configurable via Prisma)
+- GitHub Token (optional) for extended commit tracking
+
+### Installation
+
+```bash
+# Clone repository
 git clone https://github.com/eskoNBG/UltiDB.git
 cd UltiDB
 
-# Abhängigkeiten installieren
+# Install dependencies
 npm install
 
-# Prisma-Migrationen ausführen
+# Run Prisma migrations
 npx prisma migrate deploy
 
-# (Optional) Seed-Daten für Demo
+# (Optional) Seed demo data
 curl -X POST http://localhost:3000/api/seed
 curl -X POST http://localhost:3000/api/tracker/seed
-Environment konfigurieren
-Lege eine .env Datei im Projektroot an (Beispiel):
+```
 
+### Environment Configuration
 
+Create a `.env` file in the project root:
+
+```env
+# Database connection string
 DATABASE_URL="postgresql://user:password@localhost:5432/ultidb"
-NEXT_PUBLIC_BASE_URL="http://localhost:3000"
-GITHUB_TOKEN="optional-github-token-fuer-api-rate-limits"
-CRON_SECRET="dein-cron-secret"
-Entwicklung & Start
 
-# Development-Server starten
+# Base URL for API endpoints
+NEXT_PUBLIC_BASE_URL="http://localhost:3000"
+
+# GitHub token for higher API rate limits (optional)
+GITHUB_TOKEN="optional-github-token-fuer-api-rate-limits"
+
+# Secret for cron endpoint authentication
+CRON_SECRET="dein-cron-secret"
+```
+
+### Development & Start
+
+```bash
+# Start development server
 npm run dev
 
-# Linting
+# Run linting
 npm run lint
-Die App ist anschließend unter http://localhost:3000 erreichbar.
-​
+```
 
-Geplante Erweiterungen (Ideas)
-Benutzerdefinierte Favoriten / Bookmarks für eigene Awesome-Collections.
+The app will be available at http://localhost:3000
 
-Export/Import von Listen als JSON/YAML.
+## 📖 API Reference
 
-Erweiterte Filter (z. B. nach Sprache, Stars, letztem Update).
+### Sync Endpoints
 
-Öffentliche API zum Abfragen von Kategorien, Listen und Tracker-Daten.
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/sync` | POST | Sync lists with sindresorhus/awesome |
+| `/api/tracker` | POST | Update tracker data for all lists |
+| `/api/cron/daily` | GET | Run complete daily workflow |
 
-Lizenz
-Füge hier deine gewünschte Lizenz ein, z. B.:
+### Data Endpoints
 
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/seed` | POST | Seed demo data |
+| `/api/tracker/seed` | POST | Seed tracker demo data |
+
+## 🗺️ Roadmap
+
+- [ ] User-defined favorites / bookmarks for custom Awesome Collections
+- [ ] Export/import lists as JSON/YAML
+- [ ] Advanced filters (e.g., by language, stars, last update)
+- [ ] Public API for querying categories, lists, and tracker data
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
 
 MIT License – Copyright (c) 2026 eskoNBG
+
+## 🔗 Links
+
+- [sindresorhus/awesome](https://github.com/sindresorhus/awesome) - The original Awesome Lists repository
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Prisma Documentation](https://www.prisma.io/docs)
