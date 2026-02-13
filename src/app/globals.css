@@ -120,3 +120,66 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom container for centered layout */
+@layer components {
+  .container-centered {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+    max-width: min(1400px, calc(100vw - 2rem));
+  }
+
+  .page-wrapper {
+    @apply min-h-screen flex flex-col items-center;
+  }
+
+  .content-wrapper {
+    @apply w-full flex-1 flex flex-col;
+    max-width: 1400px;
+  }
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.7 0 0 / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.6 0 0 / 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: oklch(0.4 0 0 / 0.3);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.5 0 0 / 0.5);
+}
+
+/* Responsive typography */
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1025px) {
+  html {
+    font-size: 16px;
+  }
+}

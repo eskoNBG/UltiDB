@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,20 +10,118 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// Categories for organizing awesome lists
+model Category {
+  id          String        @id @default(cuid())
+  name        String        @unique
+  slug        String        @unique
+  description String?
+  icon        String?
+  color       String?       // Tailwind color class like "blue", "green", etc.
+  lists       AwesomeList[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([slug])
 }
 
-model Post {
+// Awesome Lists from GitHub
+model AwesomeList {
+  id             String        @id @default(cuid())
+  name           String
+  slug           String        @unique
+  description    String?
+  repositoryUrl  String        @unique
+  categoryId     String?
+  category       Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  stars          Int           @default(0)
+  forks          Int           @default(0)
+  language       String?
+  topics         String?       // JSON string array of topics
+  isCurated      Boolean       @default(false)
+  lastUpdated    DateTime?
+  lastCommitSha  String?       // Last processed commit SHA
+  items          AwesomeItem[]
+  updates        ListUpdate[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([categoryId])
+  @@index([stars])
+  @@index([language])
+  @@index([lastUpdated])
+}
+
+// Individual items within awesome lists
+model AwesomeItem {
+  id          String      @id @default(cuid())
+  listId      String
+  list        AwesomeList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  url         String?
+  category    String?     // Sub-category within the list
+  itemOrder   Int?
+  tags        String?     // JSON string array of tags
+  createdAt   DateTime    @default(now())
+
+  @@index([listId])
+  @@index([url])
+}
+
+// User favorites (for future feature)
+model Favorite {
   id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
+  listId    String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  
+  @@index([listId])
+}
+
+// API Keys for rate limiting (future monetization)
+model ApiKey {
+  id            String   @id @default(cuid())
+  key           String   @unique
+  email         String
+  tier          String   @default("free") // free, pro, enterprise
+  requestsUsed  Int      @default(0)
+  requestLimit  Int      @default(100)
+  lastResetAt   DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([key])
+  @@index([email])
+}
+
+// Track list updates from GitHub commits
+model ListUpdate {
+  id           String   @id @default(cuid())
+  listId       String
+  list         AwesomeList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  commitSha    String   // GitHub commit SHA
+  commitMessage String? // Commit message
+  commitDate   DateTime // When the commit was made
+  additions    Int      @default(0) // Lines added
+  deletions    Int      @default(0) // Lines deleted
+  filesChanged Int      @default(0) // Files changed
+  author       String?  // Commit author
+  createdAt    DateTime @default(now())
+
+  @@index([listId])
+  @@index([commitDate])
+  @@unique([listId, commitSha])
+}
+
+// Daily statistics for tracking
+model DailyStats {
+  id           String   @id @default(cuid())
+  date         DateTime @unique // Date only (without time)
+  listsUpdated Int      @default(0) // Number of lists updated
+  totalCommits Int      @default(0) // Total commits across all lists
+  newLists     Int      @default(0) // New lists added
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([date])
 }
