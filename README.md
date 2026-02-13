@@ -1,5 +1,7 @@
 UltiDB
-UltiDB ist ein zentraler Hub zum Entdecken, Durchsuchen und Tracken von kuratierten Awesome Lists von GitHub – inklusive täglichem Sync, Kategorien, Suchfunktion und Update-Tracker.
+
+UltiDB ist ein zentraler Hub zum Entdecken, Durchsuchen und Tracken von kuratierten Awesome Lists von GitHub
+– inklusive täglichem Sync, Kategorien, Suchfunktion und Update-Tracker.
 ​
 
 Features
