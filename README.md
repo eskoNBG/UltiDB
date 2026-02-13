@@ -1,141 +1,114 @@
-# 🚀 Welcome to Z.ai Code Scaffold
+UltiDB
+UltiDB ist ein zentraler Hub zum Entdecken, Durchsuchen und Tracken von kuratierten Awesome Lists von GitHub – inklusive täglichem Sync, Kategorien, Suchfunktion und Update-Tracker.
+​
 
-A modern, production-ready web application scaffold powered by cutting-edge technologies, designed to accelerate your development with [Z.ai](https://chat.z.ai)'s AI-powered coding assistance.
+Features
+Zentralisierte Übersicht über aktuell 672 Awesome Lists in 35 Kategorien.
+​
+Volltextsuche nach Listen, Frameworks, Libraries und Themen.
+​
+Kategoriesystem inspiriert von sindresorhus/awesome und awesomelists.top.
+​
+Täglicher Sync mit sindresorhus/awesome: neue Listen werden hinzugefügt, veraltete (6+ Monate ohne Updates) entfernt.
+​
+Tracker für aktualisierte Listen mit eigener Statistik-Card „Updated Today“ und Dropdown für zuletzt aktualisierte Listen.
+​
+Voll responsive UI mit zentriertem Layout, optimiert für Mobile, Tablet und Desktop (Next.js + shadcn/ui).
+​
+Tech-Stack
+Frontend: Next.js (App Router), React, TypeScript, shadcn/ui.
+​
+Backend / API: Next.js API Routes (REST), Cron-/Sync-Endpunkte.
+​
+Datenbank: Prisma ORM mit Modellen für AwesomeList, Category, ListUpdate, DailyStats.
+​
+Tracking & Sync: GitHub-Integration (Commits, Stars, Forks, Last Update), täglicher Sync von sindresorhus/awesome.
+​
+Kernfunktionen im Detail
+Kategorien & Listen
+35 vordefinierte Kategorien wie AI & ML, Back-End Development, Programming Languages, DevOps, Data Science, CLI Tools, Gaming und mehr.
+​
+Automatische Zuordnung von Listen zu Kategorien anhand von README-Abschnitten und Fallback-Regeln.
+​
+Kachel-Layout mit optimierter Lesbarkeit: Name über maximal zwei Zeilen, Beschreibung gekürzt, kein Overflow über Kartenränder.
+​
+Tracker & Updates
+ListUpdate-Model zum Speichern einzelner Commits/Änderungen pro Liste.
+​
+DailyStats-Model für aggregierte Tagesstatistiken (z. B. Anzahl aktualisierter Listen).
+​
+„Updated Today“-Stat-Kachel zeigt die Anzahl der heute geupdateten Listen.
+​
+Dropdown im Header mit einer Liste der zuletzt aktualisierten Awesome Lists (Name, Zeit, Commit-Info).
+​
+Täglicher Sync mit sindresorhus/awesome
+API-Endpunkt /api/sync holt die aktuelle Struktur von https://github.com/sindresorhus/awesome, aktualisiert bestehende Einträge, fügt neue hinzu und entfernt veraltete (6 Monate ohne Update).
+​
+API-Endpunkt /api/cron/daily führt den kompletten Tageslauf aus: Sync + Tracker-Update.
+​
+Konfigurierbar für externe Cron-Services (z. B. cron-job.org) oder manuelle Ausführung via curl.
+​
+Beispiel (manuell):
+# Kompletten Daily-Cron ausführen
+curl http://localhost:3000/api/cron/daily
 
-## ✨ Technology Stack
+# Nur Listen synchronisieren
+curl -X POST http://localhost:3000/api/sync
 
-This scaffold provides a robust foundation built with:
+# Nur Tracker aktualisieren
+curl -X POST http://localhost:3000/api/tracker
+Getting Started
+Voraussetzungen
+Node.js (empfohlen: LTS-Version)
 
-### 🎯 Core Framework
-- **⚡ Next.js 16** - The React framework for production with App Router
-- **📘 TypeScript 5** - Type-safe JavaScript for better developer experience
-- **🎨 Tailwind CSS 4** - Utility-first CSS framework for rapid UI development
+Eine PostgreSQL-, MySQL- oder SQLite-Datenbank (konfigurierbar via Prisma)
 
-### 🧩 UI Components & Styling
-- **🧩 shadcn/ui** - High-quality, accessible components built on Radix UI
-- **🎯 Lucide React** - Beautiful & consistent icon library
-- **🌈 Framer Motion** - Production-ready motion library for React
-- **🎨 Next Themes** - Perfect dark mode in 2 lines of code
+GitHub Token (optional) für erweitertes Commit-Tracking
 
-### 📋 Forms & Validation
-- **🎣 React Hook Form** - Performant forms with easy validation
-- **✅ Zod** - TypeScript-first schema validation
+Installation
 
-### 🔄 State Management & Data Fetching
-- **🐻 Zustand** - Simple, scalable state management
-- **🔄 TanStack Query** - Powerful data synchronization for React
-- **🌐 Fetch** - Promise-based HTTP request
+# Repository klonen
+git clone https://github.com/eskoNBG/UltiDB.git
+cd UltiDB
 
-### 🗄️ Database & Backend
-- **🗄️ Prisma** - Next-generation TypeScript ORM
-- **🔐 NextAuth.js** - Complete open-source authentication solution
+# Abhängigkeiten installieren
+npm install
 
-### 🎨 Advanced UI Features
-- **📊 TanStack Table** - Headless UI for building tables and datagrids
-- **🖱️ DND Kit** - Modern drag and drop toolkit for React
-- **📊 Recharts** - Redefined chart library built with React and D3
-- **🖼️ Sharp** - High performance image processing
+# Prisma-Migrationen ausführen
+npx prisma migrate deploy
 
-### 🌍 Internationalization & Utilities
-- **🌍 Next Intl** - Internationalization library for Next.js
-- **📅 Date-fns** - Modern JavaScript date utility library
-- **🪝 ReactUse** - Collection of essential React hooks for modern development
+# (Optional) Seed-Daten für Demo
+curl -X POST http://localhost:3000/api/seed
+curl -X POST http://localhost:3000/api/tracker/seed
+Environment konfigurieren
+Lege eine .env Datei im Projektroot an (Beispiel):
 
-## 🎯 Why This Scaffold?
 
-- **🏎️ Fast Development** - Pre-configured tooling and best practices
-- **🎨 Beautiful UI** - Complete shadcn/ui component library with advanced interactions
-- **🔒 Type Safety** - Full TypeScript configuration with Zod validation
-- **📱 Responsive** - Mobile-first design principles with smooth animations
-- **🗄️ Database Ready** - Prisma ORM configured for rapid backend development
-- **🔐 Auth Included** - NextAuth.js for secure authentication flows
-- **📊 Data Visualization** - Charts, tables, and drag-and-drop functionality
-- **🌍 i18n Ready** - Multi-language support with Next Intl
-- **🚀 Production Ready** - Optimized build and deployment settings
-- **🤖 AI-Friendly** - Structured codebase perfect for AI assistance
+DATABASE_URL="postgresql://user:password@localhost:5432/ultidb"
+NEXT_PUBLIC_BASE_URL="http://localhost:3000"
+GITHUB_TOKEN="optional-github-token-fuer-api-rate-limits"
+CRON_SECRET="dein-cron-secret"
+Entwicklung & Start
 
-## 🚀 Quick Start
+# Development-Server starten
+npm run dev
 
-```bash
-# Install dependencies
-bun install
+# Linting
+npm run lint
+Die App ist anschließend unter http://localhost:3000 erreichbar.
+​
 
-# Start development server
-bun run dev
+Geplante Erweiterungen (Ideas)
+Benutzerdefinierte Favoriten / Bookmarks für eigene Awesome-Collections.
 
-# Build for production
-bun run build
+Export/Import von Listen als JSON/YAML.
 
-# Start production server
-bun start
-```
+Erweiterte Filter (z. B. nach Sprache, Stars, letztem Update).
 
-Open [http://localhost:3000](http://localhost:3000) to see your application running.
+Öffentliche API zum Abfragen von Kategorien, Listen und Tracker-Daten.
 
-## 🤖 Powered by Z.ai
+Lizenz
+Füge hier deine gewünschte Lizenz ein, z. B.:
 
-This scaffold is optimized for use with [Z.ai](https://chat.z.ai) - your AI assistant for:
 
-- **💻 Code Generation** - Generate components, pages, and features instantly
-- **🎨 UI Development** - Create beautiful interfaces with AI assistance  
-- **🔧 Bug Fixing** - Identify and resolve issues with intelligent suggestions
-- **📝 Documentation** - Auto-generate comprehensive documentation
-- **🚀 Optimization** - Performance improvements and best practices
-
-Ready to build something amazing? Start chatting with Z.ai at [chat.z.ai](https://chat.z.ai) and experience the future of AI-powered development!
-
-## 📁 Project Structure
-
-```
-src/
-├── app/                 # Next.js App Router pages
-├── components/          # Reusable React components
-│   └── ui/             # shadcn/ui components
-├── hooks/              # Custom React hooks
-└── lib/                # Utility functions and configurations
-```
-
-## 🎨 Available Features & Components
-
-This scaffold includes a comprehensive set of modern web development tools:
-
-### 🧩 UI Components (shadcn/ui)
-- **Layout**: Card, Separator, Aspect Ratio, Resizable Panels
-- **Forms**: Input, Textarea, Select, Checkbox, Radio Group, Switch
-- **Feedback**: Alert, Toast (Sonner), Progress, Skeleton
-- **Navigation**: Breadcrumb, Menubar, Navigation Menu, Pagination
-- **Overlay**: Dialog, Sheet, Popover, Tooltip, Hover Card
-- **Data Display**: Badge, Avatar, Calendar
-
-### 📊 Advanced Data Features
-- **Tables**: Powerful data tables with sorting, filtering, pagination (TanStack Table)
-- **Charts**: Beautiful visualizations with Recharts
-- **Forms**: Type-safe forms with React Hook Form + Zod validation
-
-### 🎨 Interactive Features
-- **Animations**: Smooth micro-interactions with Framer Motion
-- **Drag & Drop**: Modern drag-and-drop functionality with DND Kit
-- **Theme Switching**: Built-in dark/light mode support
-
-### 🔐 Backend Integration
-- **Authentication**: Ready-to-use auth flows with NextAuth.js
-- **Database**: Type-safe database operations with Prisma
-- **API Client**: HTTP requests with Fetch + TanStack Query
-- **State Management**: Simple and scalable with Zustand
-
-### 🌍 Production Features
-- **Internationalization**: Multi-language support with Next Intl
-- **Image Optimization**: Automatic image processing with Sharp
-- **Type Safety**: End-to-end TypeScript with Zod validation
-- **Essential Hooks**: 100+ useful React hooks with ReactUse for common patterns
-
-## 🤝 Get Started with Z.ai
-
-1. **Clone this scaffold** to jumpstart your project
-2. **Visit [chat.z.ai](https://chat.z.ai)** to access your AI coding assistant
-3. **Start building** with intelligent code generation and assistance
-4. **Deploy with confidence** using the production-ready setup
-
----
-
-Built with ❤️ for the developer community. Supercharged by [Z.ai](https://chat.z.ai) 🚀
+MIT License – Copyright (c) 2026 eskoNBG
